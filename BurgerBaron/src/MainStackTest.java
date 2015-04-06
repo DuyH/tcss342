@@ -49,5 +49,7 @@ public class MainStackTest {
         System.out.println("Popped: " + myStack.pop());
         System.out.println("Stack size: " + myStack.size());
 
+        // If you try to pop it will give you an exception
+
     }
 }
