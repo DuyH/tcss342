@@ -6,17 +6,28 @@
  */
 
 /**
+ * A stack made from scratch, using linked-list.
+ * 
  * @author Duy Huynh
  * @version 3 April 2015
  *
- * @param <T> Generic type.
+ * @param <T>
+ *            Generic type.
  */
 public class MainStack<T> {
 
     // fields:
+    /** "Top" node in stack. */
     private Node top;
-    private int pointer = 0;
 
+    /** Pointer indicating size. **/
+    private int myPointer;
+
+    /**
+     * Determines if the stack is empty.
+     * 
+     * @return Whether stack is empty or not.
+     */
     public boolean isEmpty() {
         return top == null;
     }
@@ -28,7 +39,7 @@ public class MainStack<T> {
             top.next = top;
             top = new Node(element, top.next);
         }
-        pointer++;
+        myPointer++;
 
     }
 
@@ -40,7 +51,7 @@ public class MainStack<T> {
 
         Node temp = top;
 
-        pointer--;
+        myPointer--;
         return top.getData();
 
     }
@@ -51,7 +62,7 @@ public class MainStack<T> {
     }
 
     public int size() {
-        return pointer;
+        return myPointer;
     }
 
     public String toString() {
