@@ -32,59 +32,111 @@ public class MainStack<T> {
         return top == null;
     }
 
-    public void push(T element) {
+    /**
+     * Push element onto the stack.
+     * 
+     * @param element
+     *            Element to push onto the stack.
+     */
+    public void push(final T element) {
+
+        // Node temp = new Node(element, top);
+        //
         if (top == null) {
             top = new Node(element, null);
         } else {
-            top.next = top;
-            top = new Node(element, top.next);
+            // top.next = top;
+            // top = new Node(element, top.next);
+
+            top = new Node<T>(element, top);
         }
         myPointer++;
 
     }
 
-    public Object pop() {
+    /**
+     * Pops off the top element of the stack, removing it in the process.
+     * 
+     * @return Returns the top element of the stack.
+     */
+    public T pop() {
+        T temp;
+        if (top == null) {
+            throw new NullPointerException("Stack is empty dude!");
+        } else {
+            temp = (T) top.getElement();
+            top = top.next;
+
+            myPointer--;
+
+        }
+
+        return temp;
+
+    }
+
+    /**
+     * Peek at the first element of the stack; does not remove from stack.
+     * 
+     * @return Returns the top element of the stack.
+     */
+    public T peek() {
 
         if (top == null) {
             throw new NullPointerException("Stack is empty dude!");
         }
 
-        Node temp = top;
-
-        myPointer--;
-        return top.getData();
+        return (T) top.getElement();
 
     }
 
-    public Object peek() {
-        return top.getData();
-
-    }
-
+    /**
+     * The number of elements in the stack.
+     * 
+     * @return The number of elements in the stack.
+     */
     public int size() {
         return myPointer;
     }
 
+    /**
+     * String representation of this stack.
+     * 
+     * @return String representation of this stack.
+     */
     public String toString() {
-        return "Top of stack to bottom: " + top.toString()
-                + top.next.toString();
+
+        final StringBuilder builder = new StringBuilder("From top to bottom: ");
+
+        Node temp = top;
+
+        while (temp != null) {
+            builder.append(temp.toString());
+            temp = temp.next;
+        }
+
+        return builder.toString();
     }
 
     // inner node class for linked structure
     private static class Node<T> {
 
         // Fields:
-        private T data;
+        private T element;
         private Node next;
 
         // Constructor:
-        private Node(T data, Node next) {
-            this.data = data;
+        private Node(T element, Node next) {
+            this.element = element;
             this.next = next;
         }
 
-        private T getData() {
-            return data;
+        private T getElement() {
+            return element;
+        }
+
+        public String toString() {
+            return element.toString();
         }
 
     }
