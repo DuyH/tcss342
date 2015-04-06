@@ -5,6 +5,12 @@
  * Spring '15
  */
 
+/**
+ * @author Duy Huynh
+ * @version 3 April 2015
+ *
+ * @param <T> Generic type.
+ */
 public class MainStack<T> {
 
     // fields:
