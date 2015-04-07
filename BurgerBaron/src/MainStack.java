@@ -40,14 +40,9 @@ public class MainStack<T> {
      */
     public void push(final T element) {
 
-        // Node temp = new Node(element, top);
-        //
         if (top == null) {
-            top = new Node(element, null);
+            top = new Node<T>(element, null);
         } else {
-            // top.next = top;
-            // top = new Node(element, top.next);
-
             top = new Node<T>(element, top);
         }
         myPointer++;
