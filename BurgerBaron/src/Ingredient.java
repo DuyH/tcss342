@@ -1,17 +1,22 @@
 public enum Ingredient {
 
-    PICKLE("Pickle", 14), TOPBUN("Bun", 13), MAYO("Mayonaisse", 12), BARONSAUCE(
-            "Baron Sauce", 11), LETTUCE("Lettuce", 10), TOMATO("Tomato", 9), ONIONS(
-            "Onions", 8), PEPPERJACK("Pepperjack", 7), MOZZARELLA("Mozzarella",
-            6), CHEDDAR("Cheddar", 5), VEGGIE("Veggie", 4), CHICKEN("Chicken",
-            4), BEEF("Beef", 4), MUSHROOM("Mushroom", 3), MUSTARD("Mustard", 2), KETCHUP(
-            "Ketchup", 1), BOTTOMBUN("Bun", 0);
+    PICKLE("Pickle", "Veggie", 14), TOPBUN("Bun", "Bun", 13), MAYO(
+            "Mayonaisse", "Sauce", 12), BARONSAUCE("Baron Sauce", "Sauce", 11), LETTUCE(
+            "Lettuce", "Veggie", 10), TOMATO("Tomato", "Veggie", 9), ONIONS(
+            "Onions", "Veggie", 8), PEPPERJACK("Pepperjack", "Cheese", 7), MOZZARELLA(
+            "Mozzarella", "Cheese", 6), CHEDDAR("Cheddar", "Cheese", 5), VEGGIE(
+            "Veggie", "Patty", 4), CHICKEN("Chicken", "Patty", 4), BEEF("Beef",
+            "Patty", 4), MUSHROOM("Mushroom", "Veggie", 3), MUSTARD("Mustard",
+            "Sauce", 2), KETCHUP("Ketchup", "Sauce", 1), BOTTOMBUN("Bun",
+            "Bun", 0);
 
     private String name;
+    private String category;
     private int orderNumber;
 
-    private Ingredient(String name, int order) {
+    private Ingredient(String name, String category, int order) {
         this.name = name;
+        this.category = category;
         orderNumber = order;
     }
 
