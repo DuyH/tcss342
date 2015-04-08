@@ -14,7 +14,7 @@
  * @param <T>
  *            Generic type.
  */
-public class MainStack<T> {
+public class MyStack<T> {
 
     // fields:
     /** "Top" node in stack. */
@@ -22,6 +22,11 @@ public class MainStack<T> {
 
     /** Pointer indicating size. **/
     private int myPointer;
+
+    public MyStack() {
+        top = null;
+        myPointer = 0;
+    }
 
     /**
      * Determines if the stack is empty.
@@ -41,9 +46,9 @@ public class MainStack<T> {
     public void push(final T element) {
 
         if (top == null) {
-            top = new Node<T>(element, null);
+            top = new Node(element, null);
         } else {
-            top = new Node<T>(element, top);
+            top = new Node(element, top);
         }
         myPointer++;
 
@@ -57,10 +62,10 @@ public class MainStack<T> {
     public T pop() {
         T temp;
         if (top == null) {
-            throw new NullPointerException("Stack is empty dude!");
+            throw new NullPointerException("Nothing to pop off stack!");
         } else {
             temp = (T) top.getElement();
-            top = top.next;
+            top = top.myNextNode;
 
             myPointer--;
 
@@ -78,7 +83,7 @@ public class MainStack<T> {
     public T peek() {
 
         if (top == null) {
-            throw new NullPointerException("Stack is empty dude!");
+            throw new NullPointerException("Nothing to peek at!");
         }
 
         return (T) top.getElement();
@@ -86,7 +91,7 @@ public class MainStack<T> {
     }
 
     /**
-     * The number of elements in the stack.
+     * Size of the stack.
      * 
      * @return The number of elements in the stack.
      */
@@ -107,31 +112,31 @@ public class MainStack<T> {
 
         while (temp != null) {
             builder.append(temp.toString());
-            temp = temp.next;
+            temp = temp.myNextNode;
         }
 
         return builder.toString();
     }
 
     // inner node class for linked structure
-    private static class Node<T> {
+    private class Node {
 
         // Fields:
-        private T element;
-        private Node next;
+        private T myElement;
+        private Node myNextNode;
 
         // Constructor:
-        private Node(T element, Node next) {
-            this.element = element;
-            this.next = next;
+        private Node(final T theElement, final Node theNextNode) {
+            this.myElement = theElement;
+            this.myNextNode = theNextNode;
         }
 
         private T getElement() {
-            return element;
+            return myElement;
         }
 
         public String toString() {
-            return element.toString();
+            return myElement.toString();
         }
 
     }

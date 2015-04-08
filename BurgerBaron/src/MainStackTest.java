@@ -1,7 +1,7 @@
 public class MainStackTest {
 
     public static <T> void main(String[] args) {
-        MainStack<Integer> myStack = new MainStack<Integer>();
+        MyStack<Integer> myStack = new MyStack<Integer>();
 
         System.out.println("Is stack empty:" + myStack.isEmpty());
 
