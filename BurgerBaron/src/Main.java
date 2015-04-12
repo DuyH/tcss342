@@ -6,6 +6,8 @@ public class Main {
 
     public static void main(String[] args) {
 
+        testBurger();
+
     }
 
     private void parseLine(String line) {
@@ -16,7 +18,6 @@ public class Main {
         // Create a new burger according to the line parse
 
         // For testing, output the burger to console
-        System.out.println();
 
         // Write to outputfile the burger and order number
 
@@ -26,11 +27,11 @@ public class Main {
 
     }
 
-    private void testBurger() {
+    private static void testBurger() {
 
         // Create a baron burger and print it out to console
         Burger myBaronBurger = new Burger(true);
-        myBaronBurger.toString();
+        System.out.println(myBaronBurger.toString());
 
     }
 }

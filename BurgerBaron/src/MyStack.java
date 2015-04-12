@@ -106,16 +106,19 @@ public class MyStack<T> {
      */
     public String toString() {
 
-        final StringBuilder builder = new StringBuilder("From top to bottom: ");
+        final StringBuilder sb = new StringBuilder();
 
         Node temp = top;
 
         while (temp != null) {
-            builder.append(temp.toString());
+            sb.append(temp.toString());
+            if (temp.myNextNode != null) {
+                sb.append(", ");
+            }
             temp = temp.myNextNode;
         }
 
-        return builder.toString();
+        return sb.toString();
     }
 
     // inner node class for linked structure

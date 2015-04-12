@@ -10,44 +10,19 @@ public class Burger {
     public Burger(boolean theWorks) {
 
         if (theWorks) {
-            // Construct the Burger Baron
-
-            // (Maybe just create a stack that already has these ingredients)
-
-            // TOP STACK:
-            // add pickle
-            // add top bun
-            // add Mayo
-            // add Baron
-            // add lettuce
-            // add tomato
-            // add onion
-            // (add extra patties)
-
-            // BOTTOM STACK:
-            // add bottom bun
-            // add ketchup
-            // add mustard
-            // add mushroom
-            // add patty
-            // add cheddar
-            // add mozza
-            // add pepperjack
+            // Construct the Burger Baron.
+            baronTopStack();
+            baronBottomStack();
 
         } else {
-            // Construct bun+patty only
-
-            // Top stack:
-            // add bun
-            // add patty?
-
-            // Bottom stack:
-            // add bun
+            // Construct plain burger.
+            botStack.push(Ingredient.BOTTOMBUN);
+            botStack.push(Ingredient.BEEF);
+            botStack.push(Ingredient.TOPBUN);
         }
     }
 
     public void changePatties(String pattyType) {
-
     }
 
     public void addPatty() {
@@ -85,6 +60,7 @@ public class Burger {
         // Iterate through the
     }
 
+    @Override
     public String toString() {
 
         // Combine the top and bottom parts of the burger
@@ -100,12 +76,14 @@ public class Burger {
     }
 
     private void combineStacks() {
-        while (topStack != null) {
+
+        // Burger will be on bottom stack now
+        while (!topStack.isEmpty()) {
             botStack.push(topStack.pop());
         }
     }
 
-    private void makeTopPortion() {
+    private void baronTopStack() {
         topStack.push(Ingredient.PICKLE);
         topStack.push(Ingredient.TOPBUN);
         topStack.push(Ingredient.MAYO);
@@ -115,7 +93,7 @@ public class Burger {
         topStack.push(Ingredient.ONIONS);
     }
 
-    private void makeBottomPortion() {
+    private void baronBottomStack() {
 
         botStack.push(Ingredient.BOTTOMBUN);
         botStack.push(Ingredient.KETCHUP);
