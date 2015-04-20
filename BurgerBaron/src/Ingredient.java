@@ -1,3 +1,11 @@
+/*
+ * Duy Huynh
+ * TCSS 342 - Spring '15
+ * Assignment 1 - Burger Baron
+ * Ingredient.java
+ * 
+ */
+
 public enum Ingredient {
 
     PICKLE("Pickle", "Veggies", 14), TOPBUN("Bun", "Bun", 13), MAYO(
@@ -28,7 +36,7 @@ public enum Ingredient {
         return category;
     }
 
-    public int getOrder() {
+    public int getWeight() {
         return weight;
     }
 

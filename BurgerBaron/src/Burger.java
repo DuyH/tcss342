@@ -1,15 +1,45 @@
+/*
+ * Duy Huynh
+ * TCSS 342 - Spring '15
+ * Assignment 1 - Burger Baron
+ * Burger.java
+ * 
+ */
+
+/**
+ * Represents a burger.
+ * 
+ * @author Duy Huynh
+ * @version 6 April 2015
+ *
+ */
 public class Burger {
 
-    MyStack<Ingredient> topStack = new MyStack<>();
-    MyStack<Ingredient> botStack = new MyStack<>();
-    MyStack<Ingredient> finalStack = new MyStack<>();
+    /** Maximum number of patties. */
+    public static final int PATTY_MAX = 3;
 
-    private int orderNumber;
+    /** The top stack of the burger. */
+    private MyStack<Ingredient> topStack = new MyStack<>();
+
+    /** The bottom stack of the burger. */
+    private MyStack<Ingredient> botStack = new MyStack<>();
+
+    /** Keep track of the number of patties. */
     private int pattyCount = 1;
+
+    /** Keep track of the number of cheeses. */
     private int cheeseCount = 0;
+
+    /** Keep track of the patty type. */
     private String pattyType = Ingredient.BEEF.getName();
 
-    public Burger(boolean theWorks) {
+    /**
+     * Create a burger.
+     * 
+     * @param theWorks
+     *            Whether or not this burger is a Baron Burger.
+     */
+    public Burger(final boolean theWorks) {
 
         if (theWorks) {
             // Construct the Burger Baron.
@@ -25,7 +55,13 @@ public class Burger {
         }
     }
 
-    public void changePatties(String pattyType) {
+    /**
+     * Change the burger's patty type.
+     * 
+     * @param pattyType
+     *            The patty type.
+     */
+    public void changePatties(final String pattyType) {
 
         // Don't change patties if it's already of that type!
         if (!this.pattyType.equals(pattyType)) {
@@ -58,18 +94,24 @@ public class Burger {
         }
     }
 
+    /**
+     * Add a patty to the burger.
+     */
     public void addPatty() {
 
         // Only add if pattyCount is 2 or less, bc max is 3
         // while(pattyAmount)
         // pattyAmount++;
-        if (pattyCount < 3) {
+        if (pattyCount < PATTY_MAX) {
             topStack.push(Ingredient.getIngredient(pattyType));
             pattyCount++;
         }
 
     }
 
+    /**
+     * Remove a patty from the burger.
+     */
     public void removePatty() {
 
         // Only able to remove if patty is 2 or more. min is 1 patty.
@@ -80,7 +122,13 @@ public class Burger {
 
     }
 
-    public void addCategory(String type) {
+    /**
+     * Add category of ingredients to burger.
+     * 
+     * @param type
+     *            Name of category.
+     */
+    public void addCategory(final String type) {
 
         if ("Cheese".equals(type)) {
             for (int i = 0; i < cheeseCount; i++) {
@@ -167,11 +215,18 @@ public class Burger {
 
     }
 
-    public void removeCategory(String type) {
+    /**
+     * Removes category of ingredients from burger.
+     * 
+     * @param type
+     *            Name of category.
+     */
+    public void removeCategory(final String type) {
         if ("Cheese".equals(type)) {
             while ("Cheese".equals(botStack.peek().getCategory())) {
                 botStack.pop();
             }
+            cheeseCount = 0;
 
         } else if ("Veggies".equals(type)) {
 
@@ -231,13 +286,107 @@ public class Burger {
         }
     }
 
-    public void addIngredient(String type) {
+    /**
+     * Add ingredient to burger.
+     * 
+     * @param type
+     *            Name of ingredient.
+     */
+    public void addIngredient(final String type) {
+
+        // Update cheese count:
+        if ("Cheese".equals(Ingredient.getIngredient(type))) {
+            cheeseCount++;
+        }
+        // Special case Pickle:
+        if ("Pickle".equals(type)) {
+            topStack = flipStack(topStack);
+            if (!"Pickle".equals(topStack.peek().getName())) {
+                topStack.push(Ingredient.PICKLE);
+            }
+            topStack = flipStack(topStack);
+        } else {
+            final MyStack<Ingredient> tempStack = new MyStack<>();
+            final int weight = Ingredient.getIngredient(type).getWeight();
+
+            // Combine the stacks
+            int count = topStack.size();
+            if (weight > 7) {
+                count++;
+            }
+            while (!topStack.isEmpty()) {
+                botStack.push(topStack.pop());
+            }
+
+            while (botStack.peek().getWeight() >= weight) {
+                if (botStack.peek().getWeight() == weight) {
+                    break;
+                }
+
+                tempStack.push(botStack.pop());
+                if (weight < tempStack.peek().getWeight()
+                        && weight > botStack.peek().getWeight()) {
+                    tempStack.push(Ingredient.getIngredient(type));
+                    break;
+                }
+            }
+            while (!tempStack.isEmpty()) {
+                botStack.push(tempStack.pop());
+            }
+
+            for (int i = 0; i < count; i++) {
+                topStack.push(botStack.pop());
+            }
+
+        }
 
     }
 
-    public void removeIngredient(String type) {
+    /**
+     * Remove ingredient from burger.
+     * 
+     * @param type
+     *            Name of ingredient.
+     */
+    public void removeIngredient(final String type) {
 
-        // Iterate through the
+        // Update cheese count:
+        if ("Cheese".equals(Ingredient.getIngredient(type))) {
+            cheeseCount--;
+        }
+        // Iterate through the combined stack, removing the ingredient
+
+        final int weight = Ingredient.getIngredient(type).getWeight();
+        final MyStack<Ingredient> tempStack = new MyStack<>();
+        // Iterate through top stack:
+        if (weight > 7) {
+            // Iterate through stack and remove ingredient
+            while (!topStack.isEmpty()) {
+                if (Ingredient.getIngredient(type) == topStack.peek()) {
+                    topStack.pop();
+                } else {
+                    tempStack.push(topStack.pop());
+                }
+            }
+            // Restore top stack
+            while (!tempStack.isEmpty()) {
+                topStack.push(tempStack.pop());
+            }
+            // Iterate through bottom stack
+        } else {
+            // Iterate through stack and remove ingredient
+            while (!botStack.isEmpty()) {
+                if (Ingredient.getIngredient(type) == botStack.peek()) {
+                    botStack.pop();
+                } else {
+                    tempStack.push(botStack.pop());
+                }
+            }
+            // Restore bottom stack
+            while (!tempStack.isEmpty()) {
+                botStack.push(tempStack.pop());
+            }
+        }
     }
 
     @Override
@@ -248,7 +397,7 @@ public class Burger {
         final StringBuilder sb = new StringBuilder("[");
 
         // Flip the top stack and print it out, then flip again to restore top
-        MyStack<Ingredient> temp = flipStack(topStack);
+        final MyStack<Ingredient> temp = flipStack(topStack);
         sb.append(temp);
         topStack = flipStack(temp);
         sb.append(", ");
@@ -259,17 +408,27 @@ public class Burger {
         return sb.toString();
     }
 
-    private MyStack<Ingredient> flipStack(MyStack<Ingredient> stackToFlip) {
+    /**
+     * Reverses the order of a stack.
+     * 
+     * @param theStack
+     *            The stack to be flipped.
+     * @return The flipped stack.
+     */
+    private MyStack<Ingredient> flipStack(final MyStack<Ingredient> theStack) {
 
         // Make a copy of the stack, but upside down
 
-        MyStack<Ingredient> tempStack = new MyStack<>();
-        while (!stackToFlip.isEmpty()) {
-            tempStack.push(stackToFlip.pop());
+        final MyStack<Ingredient> tempStack = new MyStack<>();
+        while (!theStack.isEmpty()) {
+            tempStack.push(theStack.pop());
         }
         return tempStack;
     }
 
+    /**
+     * Create the top half of a baron burger.
+     */
     private void baronTopStack() {
         topStack.push(Ingredient.PICKLE);
         topStack.push(Ingredient.TOPBUN);
@@ -280,6 +439,9 @@ public class Burger {
         topStack.push(Ingredient.ONIONS);
     }
 
+    /**
+     * Create the bottom half of a baron burger.
+     */
     private void baronBottomStack() {
 
         botStack.push(Ingredient.BOTTOMBUN);

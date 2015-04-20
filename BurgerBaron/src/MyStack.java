@@ -1,8 +1,9 @@
 /*
  * Duy Huynh
- * TCSS 342
+ * TCSS 342 - Spring '15
  * Assignment 1 - Burger Baron
- * Spring '15
+ * MyStack.java
+ * 
  */
 
 /**

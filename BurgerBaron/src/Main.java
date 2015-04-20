@@ -1,3 +1,11 @@
+/*
+ * Duy Huynh
+ * TCSS 342 - Spring '15
+ * Assignment 1 - Burger Baron
+ * Main.java
+ * 
+ */
+
 public class Main {
 
     private String category;
@@ -6,7 +14,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-        testBaronBurger();
         testBurger();
 
     }
@@ -31,41 +38,53 @@ public class Main {
     private static void testBaronBurger() {
 
         // Create a baron burger and print it out to console
-        Burger myBaronBurger = new Burger(true);
-        myBaronBurger.changePatties("Beef");
-        myBaronBurger.changePatties("Chicken");
-        myBaronBurger.changePatties("Beef");
-        myBaronBurger.changePatties("Veggie");
-        System.out.println(myBaronBurger);
+        final Burger baronBurger = new Burger(true);
+        baronBurger.changePatties("Beef");
+        baronBurger.changePatties("Chicken");
+        baronBurger.changePatties("Beef");
+        baronBurger.changePatties("Veggie");
+        System.out.println(baronBurger);
 
         // Add two more patties
-        myBaronBurger.addPatty();
-        myBaronBurger.addPatty();
-        System.out.println(myBaronBurger);
+        baronBurger.addPatty();
+        baronBurger.addPatty();
+        System.out.println(baronBurger);
 
         // Attempt "4th" patty, nothing should happen
-        myBaronBurger.addPatty();
-        System.out.println(myBaronBurger);
+        baronBurger.addPatty();
+        System.out.println(baronBurger);
 
         // Remove one patty, then another, and another (but won't work)
-        myBaronBurger.removePatty();
-        System.out.println(myBaronBurger);
-        myBaronBurger.removePatty();
-        System.out.println(myBaronBurger);
-        myBaronBurger.removePatty();
-        System.out.println(myBaronBurger);
+        baronBurger.removePatty();
+        System.out.println(baronBurger);
+        baronBurger.removePatty();
+        System.out.println(baronBurger);
+        baronBurger.removePatty();
+        System.out.println(baronBurger);
 
     }
 
     private static void testBurger() {
-        Burger boringBurger = new Burger(false);
+
+        testBaronBurger();
+
+        final Burger boringBurger = new Burger(false);
+
+        // Change patties
         boringBurger.changePatties("Chicken");
         System.out.println(boringBurger);
+
+        // Remove patty:
         boringBurger.removePatty();
+        System.out.println(boringBurger);
+
+        // Add too many patties:
         boringBurger.addPatty();
         boringBurger.addPatty();
         boringBurger.addPatty();
         System.out.println(boringBurger);
+
+        // Add cheese categories (second call should have no effect)
         boringBurger.addCategory("Cheese");
         boringBurger.addCategory("Cheese");
         System.out.println(boringBurger);
@@ -74,10 +93,11 @@ public class Main {
         boringBurger.addCategory("Sauces");
         System.out.println(boringBurger);
 
+        // Add sauce again, should have no effect
         boringBurger.addCategory("Sauce");
         System.out.println(boringBurger);
 
-        // Add veggies
+        // Add veggies (second call no effect)
         boringBurger.addCategory("Veggies");
         boringBurger.addCategory("Veggies");
         System.out.println(boringBurger);
@@ -101,5 +121,19 @@ public class Main {
         boringBurger.removePatty();
         System.out.println(boringBurger);
 
+        boringBurger.addIngredient("Mushrooms");
+        boringBurger.addIngredient("Lettuce");
+        boringBurger.addIngredient("Pickle");
+        boringBurger.addIngredient("Pickle");
+        boringBurger.addIngredient("Pepperjack");
+        boringBurger.addIngredient("Mayonnaise");
+        System.out.println(boringBurger);
+
+        boringBurger.removeIngredient("Pickle");
+        boringBurger.removeIngredient("Pickle");
+        boringBurger.removeIngredient("Mayonnaise");
+        boringBurger.removeIngredient("Pepperjack");
+        System.out.println(boringBurger);
     }
+
 }
