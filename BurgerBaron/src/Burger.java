@@ -1,141 +1,198 @@
 public class Burger {
 
-	MyStack<Ingredient> topStack = new MyStack<>();
-	MyStack<Ingredient> botStack = new MyStack<>();
-	MyStack<Ingredient> finalStack = new MyStack<>();
+    MyStack<Ingredient> topStack = new MyStack<>();
+    MyStack<Ingredient> botStack = new MyStack<>();
+    MyStack<Ingredient> finalStack = new MyStack<>();
 
-	private int orderNumber;
-	private int pattyCount = 1;
-	private String pattyType = Ingredient.BEEF.getName();
+    private int orderNumber;
+    private int pattyCount = 1;
+    private int cheeseCount = 0;
+    private String pattyType = Ingredient.BEEF.getName();
 
-	public Burger(boolean theWorks) {
+    public Burger(boolean theWorks) {
 
-		if (theWorks) {
-			// Construct the Burger Baron.
-			baronTopStack();
-			baronBottomStack();
+        if (theWorks) {
+            // Construct the Burger Baron.
+            cheeseCount = 3;
+            baronTopStack();
+            baronBottomStack();
 
-		} else {
-			// Construct plain burger.
-			botStack.push(Ingredient.BOTTOMBUN);
-			botStack.push(Ingredient.BEEF);
-			botStack.push(Ingredient.TOPBUN);
-		}
-	}
+        } else {
+            // Construct plain burger.
+            topStack.push(Ingredient.TOPBUN);
+            botStack.push(Ingredient.BOTTOMBUN);
+            botStack.push(Ingredient.BEEF);
+        }
+    }
 
-	public void changePatties(String pattyType) {
+    public void changePatties(String pattyType) {
 
-		MyStack<Ingredient> tempStack = null;
-		int count = 0;
+        // Don't change patties if it's already of that type!
+        if (!this.pattyType.equals(pattyType)) {
+            final MyStack<Ingredient> tempStack = new MyStack<>();
 
-		// Don't change patties if it's already of that type!
-		if (!this.pattyType.equals(pattyType)) {
+            // change the first patty
+            for (int i = 0; i < cheeseCount; i++) {
+                tempStack.push(botStack.pop());
+            }
+            // Pop off old patty:
+            botStack.pop();
+            // Push new patty:
+            botStack.push(Ingredient.getIngredient(pattyType));
+            // Put back the cheeses
+            for (int i = 0; i < cheeseCount; i++) {
+                botStack.push(tempStack.pop());
+            }
 
-			// change the first patty
-			// checking the bottom, go through the cheeses
+            // Pop off old patties, if any, from top stack
+            for (int i = 0; i < pattyCount - 1; i++) {
+                topStack.pop();
+            }
+            // Push new patties, if any, onto top stack
+            for (int i = 0; i < pattyCount - 1; i++) {
+                topStack.push(Ingredient.getIngredient(pattyType));
+            }
 
-			// pop of all the cheeses
-			while (!botStack.peek().getCategory().equals("Patty")) {
-				tempStack.push(botStack.pop());
-				count++;
-				botStack.push(Ingredient.valueOf(pattyType));
-			}
+            // Change patty type
+            this.pattyType = pattyType;
+        }
+    }
 
-			for (int i = 0; i < pattyCount; i++) {
-				if (botStack.peek().getCategory().equals("Patty")) {
-					tempStack.push(botStack.pop());
-				} else {
-					tempStack.push(botStack.pop());
-				}
-			}
+    public void addPatty() {
 
-			// If there are more
-			// Change the other two patties
-		}
+        // Only add if pattyCount is 2 or less, bc max is 3
+        // while(pattyAmount)
+        // pattyAmount++;
+        if (pattyCount < 3) {
+            topStack.push(Ingredient.getIngredient(pattyType));
+            pattyCount++;
+        }
 
-	}
+    }
 
-	public void addPatty() {
+    public void removePatty() {
 
-		// Only add if pattyCount is 2 or less, bc max is 3
-		// while(pattyAmount)
-		// pattyAmount++;
-	}
+        // Only able to remove if patty is 2 or more. min is 1 patty.
+        if (pattyCount != 1) {
+            topStack.pop();
+            pattyCount--;
+        }
 
-	public void removePatty() {
+    }
 
-		// Only able to remove if patty is 2 or more. min is 1 patty.
+    public void addCategory(String type) {
 
-	}
+        if ("Cheese".equals(type)) {
+            for (int i = 0; i < cheeseCount; i++) {
+                botStack.pop();
+            }
+            botStack.push(Ingredient.CHEDDAR);
+            botStack.push(Ingredient.MOZZARELLA);
+            botStack.push(Ingredient.PEPPERJACK);
+            cheeseCount = 3;
 
-	public void addCategory(String type) {
+        } else if ("Sauce".equals(type)) {
 
-		if (type == "Cheese") {
+            // Add sauces
+            final MyStack<Ingredient> tempStack = new MyStack<>();
 
-		} else if (type == "Sauce") {
+            // Top stack sauces:
+            topStack = flipStack(topStack);
 
-		} else if (type == "Veggies") {
+            while (!topStack.isEmpty()) {
+                tempStack.push(topStack.pop());
+                if ("Sauce".equals(tempStack.peek().getCategory())) {
+                    tempStack.pop();
+                }
+                if ("Bun".equals(tempStack.peek().getCategory())) {
+                    tempStack.push(Ingredient.MAYO);
+                    tempStack.push(Ingredient.BARONSAUCE);
+                }
+                System.out.println("Stuck");
 
-		}
+            }
+            topStack = tempStack;
 
-	}
+            // Bottom stack sauces:
+            botStack = flipStack(botStack);
+            botStack.pop(); // Pop off bottom bun
+            while ("Sauce".equals(botStack.peek().getCategory())) {
+                botStack.pop();
+            }
+            botStack.push(Ingredient.MUSTARD);
+            botStack.push(Ingredient.KETCHUP);
+            botStack.push(Ingredient.BOTTOMBUN);
+            botStack = flipStack(botStack);
 
-	public void removeCategory(String type) {
+        } else if ("Veggies".equals(type)) {
 
-	}
+        }
 
-	public void addIngredient(String type) {
+    }
 
-	}
+    public void removeCategory(String type) {
 
-	public void removeIngredient(String type) {
+    }
 
-		// Iterate through the
-	}
+    public void addIngredient(String type) {
 
-	@Override
-	public String toString() {
+    }
 
-		// Combine the top and bottom parts of the burger
-		combineStacks();
+    public void removeIngredient(String type) {
 
-		final StringBuilder sb = new StringBuilder("[");
+        // Iterate through the
+    }
 
-		sb.append(botStack.toString());
+    @Override
+    public String toString() {
 
-		sb.append("]");
+        // Combine the top and bottom parts of the burger
 
-		return sb.toString();
-	}
+        final StringBuilder sb = new StringBuilder("[");
 
-	private void combineStacks() {
+        // Flip the top stack and print it out, then flip again to restore top
+        MyStack<Ingredient> temp = flipStack(topStack);
+        sb.append(temp);
+        topStack = flipStack(temp);
+        sb.append(", ");
+        sb.append(botStack.toString());
 
-		// Burger will be on bottom stack now
-		while (!topStack.isEmpty()) {
-			botStack.push(topStack.pop());
-		}
-	}
+        sb.append("]");
 
-	private void baronTopStack() {
-		topStack.push(Ingredient.PICKLE);
-		topStack.push(Ingredient.TOPBUN);
-		topStack.push(Ingredient.MAYO);
-		topStack.push(Ingredient.BARONSAUCE);
-		topStack.push(Ingredient.LETTUCE);
-		topStack.push(Ingredient.TOMATO);
-		topStack.push(Ingredient.ONIONS);
-	}
+        return sb.toString();
+    }
 
-	private void baronBottomStack() {
+    private MyStack<Ingredient> flipStack(MyStack<Ingredient> stackToFlip) {
 
-		botStack.push(Ingredient.BOTTOMBUN);
-		botStack.push(Ingredient.KETCHUP);
-		botStack.push(Ingredient.MUSTARD);
-		botStack.push(Ingredient.MUSHROOM);
-		botStack.push(Ingredient.BEEF);
-		botStack.push(Ingredient.CHEDDAR);
-		botStack.push(Ingredient.MOZZARELLA);
-		botStack.push(Ingredient.PEPPERJACK);
+        // Make a copy of the stack, but upside down
 
-	}
+        MyStack<Ingredient> tempStack = new MyStack<>();
+        while (!stackToFlip.isEmpty()) {
+            tempStack.push(stackToFlip.pop());
+        }
+        return tempStack;
+    }
+
+    private void baronTopStack() {
+        topStack.push(Ingredient.PICKLE);
+        topStack.push(Ingredient.TOPBUN);
+        topStack.push(Ingredient.MAYO);
+        topStack.push(Ingredient.BARONSAUCE);
+        topStack.push(Ingredient.LETTUCE);
+        topStack.push(Ingredient.TOMATO);
+        topStack.push(Ingredient.ONIONS);
+    }
+
+    private void baronBottomStack() {
+
+        botStack.push(Ingredient.BOTTOMBUN);
+        botStack.push(Ingredient.KETCHUP);
+        botStack.push(Ingredient.MUSTARD);
+        botStack.push(Ingredient.MUSHROOM);
+        botStack.push(Ingredient.BEEF);
+        botStack.push(Ingredient.CHEDDAR);
+        botStack.push(Ingredient.MOZZARELLA);
+        botStack.push(Ingredient.PEPPERJACK);
+
+    }
 }

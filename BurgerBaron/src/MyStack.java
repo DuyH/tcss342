@@ -82,9 +82,10 @@ public class MyStack<T> {
      */
     public T peek() {
 
-        if (top == null) {
-            throw new NullPointerException("Nothing to peek at!");
-        }
+        // Allow to peek at NULL, so the following is unneeded
+        // if (top == null) {
+        // throw new NullPointerException("Nothing to peek at!");
+        // }
 
         return (T) top.getElement();
 
@@ -125,8 +126,8 @@ public class MyStack<T> {
     private class Node {
 
         // Fields:
-        private T myElement;
-        private Node myNextNode;
+        private T myElement = null;
+        private Node myNextNode = null;
 
         // Constructor:
         private Node(final T theElement, final Node theNextNode) {
