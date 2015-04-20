@@ -71,10 +71,34 @@ public class Main {
         System.out.println(boringBurger);
 
         // Add sauce category
-        boringBurger.addCategory("Sauce");
+        boringBurger.addCategory("Sauces");
         System.out.println(boringBurger);
 
         boringBurger.addCategory("Sauce");
+        System.out.println(boringBurger);
+
+        // Add veggies
+        boringBurger.addCategory("Veggies");
+        boringBurger.addCategory("Veggies");
+        System.out.println(boringBurger);
+
+        // Remove:
+        boringBurger.removeCategory("Sauce");
+        boringBurger.removeCategory("Sauce");
+        System.out.println(boringBurger);
+
+        boringBurger.removeCategory("Veggies");
+        boringBurger.removeCategory("Veggies");
+        System.out.println(boringBurger);
+
+        boringBurger.removeCategory("Cheese");
+        boringBurger.removeCategory("Cheese");
+        System.out.println(boringBurger);
+
+        boringBurger.removePatty();
+        boringBurger.removePatty();
+        boringBurger.removePatty();
+        boringBurger.removePatty();
         System.out.println(boringBurger);
 
     }

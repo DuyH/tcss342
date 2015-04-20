@@ -99,6 +99,7 @@ public class Burger {
             // Top stack sauces:
             topStack = flipStack(topStack);
 
+            // Go through upside-down top stack, removing sauces and adding them
             while (!topStack.isEmpty()) {
                 tempStack.push(topStack.pop());
                 if ("Sauce".equals(tempStack.peek().getCategory())) {
@@ -108,7 +109,6 @@ public class Burger {
                     tempStack.push(Ingredient.MAYO);
                     tempStack.push(Ingredient.BARONSAUCE);
                 }
-                System.out.println("Stuck");
 
             }
             topStack = tempStack;
@@ -126,12 +126,109 @@ public class Burger {
 
         } else if ("Veggies".equals(type)) {
 
+            final MyStack<Ingredient> tempStack = new MyStack<>();
+
+            // Top Stack veggies:
+            for (int i = 0; i < pattyCount - 1; i++) {
+                tempStack.push(topStack.pop());
+            }
+            // Remove exisiting veggies:
+            while ("Veggies".equals(topStack.peek().getCategory())) {
+                topStack.pop();
+            }
+            // Add all top stack veggies:
+            topStack.push(Ingredient.LETTUCE);
+            topStack.push(Ingredient.TOMATO);
+            topStack.push(Ingredient.ONIONS);
+
+            // Put top stack patties back on:
+            for (int i = 0; i < pattyCount - 1; i++) {
+                topStack.push(tempStack.pop());
+            }
+            // Add a pickle
+            topStack = flipStack(topStack);
+            if (!"Pickle".equals(topStack.peek().getName())) {
+                topStack.push(Ingredient.PICKLE);
+            }
+            topStack = flipStack(topStack);
+
+            // Bottom Stack veggies (mushroom only)
+            for (int i = 0; i < cheeseCount + 1; i++) { // +1 mandatory patty
+                tempStack.push(botStack.pop());
+            }
+            if (!"Mushrooms".equals(botStack.peek().getName())) {
+                botStack.push(Ingredient.MUSHROOM);
+            }
+            for (int i = 0; i < cheeseCount + 1; i++) {
+                botStack.push(tempStack.pop());
+            }
+
         }
 
     }
 
     public void removeCategory(String type) {
+        if ("Cheese".equals(type)) {
+            while ("Cheese".equals(botStack.peek().getCategory())) {
+                botStack.pop();
+            }
 
+        } else if ("Veggies".equals(type)) {
+
+            // Remove top stack veggies
+            for (int i = 0; i < pattyCount - 1; i++) {
+                topStack.pop();
+            }
+            while ("Veggies".equals(topStack.peek().getCategory())) {
+                topStack.pop();
+            }
+            for (int i = 0; i < pattyCount - 1; i++) {
+                topStack.push(Ingredient.getIngredient(pattyType));
+            }
+            // Remove stupid pickle:
+            topStack = flipStack(topStack);
+            if ("Pickle".equals(topStack.peek().getName())) {
+                topStack.pop();
+            }
+            topStack = flipStack(topStack);
+
+            // Remove the lonely mushroom if present:
+            final MyStack<Ingredient> tempStack = new MyStack<>();
+            for (int i = 0; i < cheeseCount + 1; i++) {
+                tempStack.push(botStack.pop());
+            }
+            if ("Mushrooms".equals(botStack.peek().getName())) {
+                botStack.pop();
+            }
+            for (int i = 0; i < cheeseCount + 1; i++) {
+                botStack.push(tempStack.pop());
+            }
+
+        } else if ("Sauce".equals(type)) {
+
+            // Remove top stack sauces:
+            final MyStack<Ingredient> tempStack = new MyStack<>();
+
+            while (!topStack.isEmpty()) {
+                tempStack.push(topStack.pop());
+                if ("Sauce".equals(tempStack.peek().getCategory())) {
+                    tempStack.pop();
+                }
+            }
+            topStack = flipStack(tempStack);
+
+            // removing bottom stack sauces:
+            botStack = flipStack(botStack);
+            botStack.pop(); // pop off bun
+            for (int i = 0; i < 2; i++) {
+                if ("Sauce".equals(botStack.peek().getCategory())) {
+                    botStack.pop();
+                }
+            }
+            botStack.push(Ingredient.BOTTOMBUN);
+            botStack = flipStack(botStack);
+
+        }
     }
 
     public void addIngredient(String type) {
