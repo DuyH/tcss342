@@ -311,7 +311,7 @@ public class Burger {
 
             // Combine the stacks
             int count = topStack.size();
-            if (weight > 7) {
+            if (weight > Ingredient.BEEF.getWeight()) {
                 count++;
             }
             while (!topStack.isEmpty()) {
