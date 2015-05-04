@@ -17,6 +17,15 @@ public class Burger {
 
     /** Maximum number of patties. */
     public static final int PATTY_MAX = 3;
+    
+    /** Minimum number of patties. */
+    public static final int PATTY_MIN = 1;
+
+    /** Maximum cheese count. */
+    public static final int CHEESE_MAX = 3;
+    
+    /** Top stack starting weight. */
+    public static final int TOP_START = 7;
 
     /** The top stack of the burger. */
     private MyStack<Ingredient> topStack = new MyStack<>();
@@ -36,14 +45,13 @@ public class Burger {
     /**
      * Create a burger.
      * 
-     * @param theWorks
-     *            Whether or not this burger is a Baron Burger.
+     * @param theWorks Whether or not this burger is a Baron Burger.
      */
     public Burger(final boolean theWorks) {
 
         if (theWorks) {
             // Construct the Burger Baron.
-            cheeseCount = 3;
+            cheeseCount = CHEESE_MAX;
             baronTopStack();
             baronBottomStack();
 
@@ -58,8 +66,7 @@ public class Burger {
     /**
      * Change the burger's patty type.
      * 
-     * @param pattyType
-     *            The patty type.
+     * @param pattyType The patty type.
      */
     public void changePatties(final String pattyType) {
 
@@ -67,41 +74,45 @@ public class Burger {
         if (!this.pattyType.equals(pattyType)) {
             final MyStack<Ingredient> tempStack = new MyStack<>();
 
-            // change the first patty
+            // Change the patty that is underneath the cheeses
+
+            // 1. pop off and store the cheeses:
             for (int i = 0; i < cheeseCount; i++) {
                 tempStack.push(botStack.pop());
             }
-            // Pop off old patty:
+
+            // 2. Dispose the old patty
             botStack.pop();
-            // Push new patty:
+
+            // 3. Push new patty:
             botStack.push(Ingredient.getIngredient(pattyType));
-            // Put back the cheeses
+            
+            // 4. Put back the cheeses
             for (int i = 0; i < cheeseCount; i++) {
                 botStack.push(tempStack.pop());
             }
 
-            // Pop off old patties, if any, from top stack
+            // Work on the patties of the other stack
+            
+            // 5. Pop off old patties, if any, from top stack
             for (int i = 0; i < pattyCount - 1; i++) {
                 topStack.pop();
             }
-            // Push new patties, if any, onto top stack
+            
+            // 6. Push new patties, if any, onto top stack
             for (int i = 0; i < pattyCount - 1; i++) {
                 topStack.push(Ingredient.getIngredient(pattyType));
             }
 
-            // Change patty type
+            // 7. Change patty type
             this.pattyType = pattyType;
         }
     }
 
-    /**
-     * Add a patty to the burger.
-     */
+    /** Add a patty to the burger. */
     public void addPatty() {
 
         // Only add if pattyCount is 2 or less, bc max is 3
-        // while(pattyAmount)
-        // pattyAmount++;
         if (pattyCount < PATTY_MAX) {
             topStack.push(Ingredient.getIngredient(pattyType));
             pattyCount++;
@@ -109,13 +120,11 @@ public class Burger {
 
     }
 
-    /**
-     * Remove a patty from the burger.
-     */
+    /**  Remove a patty from the burger. */
     public void removePatty() {
 
         // Only able to remove if patty is 2 or more. min is 1 patty.
-        if (pattyCount != 1) {
+        if (pattyCount != PATTY_MIN) {
             topStack.pop();
             pattyCount--;
         }
@@ -125,8 +134,7 @@ public class Burger {
     /**
      * Add category of ingredients to burger.
      * 
-     * @param type
-     *            Name of category.
+     * @param type Name of category.
      */
     public void addCategory(final String type) {
 
@@ -137,7 +145,7 @@ public class Burger {
             botStack.push(Ingredient.CHEDDAR);
             botStack.push(Ingredient.MOZZARELLA);
             botStack.push(Ingredient.PEPPERJACK);
-            cheeseCount = 3;
+            cheeseCount = CHEESE_MAX;
 
         } else if ("Sauce".equals(type)) {
 
@@ -218,16 +226,18 @@ public class Burger {
     /**
      * Removes category of ingredients from burger.
      * 
-     * @param type
-     *            Name of category.
+     * @param type Name of category.
      */
     public void removeCategory(final String type) {
+        
+        // Remove all cheeses
         if ("Cheese".equals(type)) {
             while ("Cheese".equals(botStack.peek().getCategory())) {
                 botStack.pop();
             }
             cheeseCount = 0;
 
+            // Remove all veggies
         } else if ("Veggies".equals(type)) {
 
             // Remove top stack veggies
@@ -259,6 +269,7 @@ public class Burger {
                 botStack.push(tempStack.pop());
             }
 
+            // Remove all sauces
         } else if ("Sauce".equals(type)) {
 
             // Remove top stack sauces:
@@ -289,16 +300,15 @@ public class Burger {
     /**
      * Add ingredient to burger.
      * 
-     * @param type
-     *            Name of ingredient.
+     * @param type Name of ingredient.
      */
     public void addIngredient(final String type) {
 
-        // Update cheese count:
+        // Update cheese count if cheese is ingredient to be added:
         if ("Cheese".equals(Ingredient.getIngredient(type))) {
             cheeseCount++;
         }
-        // Special case Pickle:
+        // Special case: adding stupid Pickle:
         if ("Pickle".equals(type)) {
             topStack = flipStack(topStack);
             if (!"Pickle".equals(topStack.peek().getName())) {
@@ -345,8 +355,7 @@ public class Burger {
     /**
      * Remove ingredient from burger.
      * 
-     * @param type
-     *            Name of ingredient.
+     * @param type  Name of ingredient.
      */
     public void removeIngredient(final String type) {
 
@@ -359,7 +368,7 @@ public class Burger {
         final int weight = Ingredient.getIngredient(type).getWeight();
         final MyStack<Ingredient> tempStack = new MyStack<>();
         // Iterate through top stack:
-        if (weight > 7) {
+        if (weight > TOP_START) {
             // Iterate through stack and remove ingredient
             while (!topStack.isEmpty()) {
                 if (Ingredient.getIngredient(type) == topStack.peek()) {
@@ -411,8 +420,7 @@ public class Burger {
     /**
      * Reverses the order of a stack.
      * 
-     * @param theStack
-     *            The stack to be flipped.
+     * @param theStack The stack to be flipped.
      * @return The flipped stack.
      */
     private MyStack<Ingredient> flipStack(final MyStack<Ingredient> theStack) {
