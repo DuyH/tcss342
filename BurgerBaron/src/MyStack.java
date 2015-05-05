@@ -12,8 +12,7 @@
  * @author Duy Huynh
  * @version 3 April 2015
  *
- * @param <T>
- *            Generic type.
+ * @param <T> Generic type.
  */
 public class MyStack<T> {
 
@@ -24,6 +23,7 @@ public class MyStack<T> {
     /** Pointer indicating size. **/
     private int myPointer;
 
+    /**Create a Stack.  */
     public MyStack() {
         top = null;
         myPointer = 0;
@@ -61,17 +61,15 @@ public class MyStack<T> {
      * @return Returns the top element of the stack.
      */
     public T pop() {
+        
         T temp;
         if (top == null) {
             throw new NullPointerException("Nothing to pop off stack!");
         } else {
             temp = (T) top.getElement();
             top = top.myNextNode;
-
             myPointer--;
-
         }
-
         return temp;
 
     }
@@ -82,14 +80,7 @@ public class MyStack<T> {
      * @return Returns the top element of the stack.
      */
     public T peek() {
-
-        // Allow to peek at NULL, so the following is unneeded
-        // if (top == null) {
-        // throw new NullPointerException("Nothing to peek at!");
-        // }
-
         return (T) top.getElement();
-
     }
 
     /**
@@ -123,23 +114,42 @@ public class MyStack<T> {
         return sb.toString();
     }
 
-    // inner node class for linked structure
-    private class Node {
+    /**
+     * Inner node class for linked structure.
+     * 
+     * @author Duy Huynh
+     */
+    private final class Node {
 
         // Fields:
-        private T myElement = null;
-        private Node myNextNode = null;
+        /**An element of the stack.*/
+        private T myElement;
+        
+        /**The next node in the list.*/
+        private Node myNextNode;
 
         // Constructor:
+        /**
+         * A node in the linked data structure.
+         * 
+         * @param theElement The node in the linked list.
+         * @param theNextNode The next node in the list.
+         */
         private Node(final T theElement, final Node theNextNode) {
             this.myElement = theElement;
             this.myNextNode = theNextNode;
         }
 
+        /**
+         * Return the element.
+         * 
+         * @return The element to return.
+         */
         private T getElement() {
             return myElement;
         }
 
+        @Override
         public String toString() {
             return myElement.toString();
         }
