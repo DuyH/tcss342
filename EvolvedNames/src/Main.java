@@ -15,9 +15,17 @@ public class Main {
             } else {
                 miss++;
             }
+
+            System.out
+                    .println("Location: " + random.nextInt("ABCDEF".length()));
         }
         System.out.println("Hit: " + hit);
         System.out.println("Miss: " + miss);
+        char[] a = { 'a', 'b' };
+        System.out.println(a.length);
+        StringBuilder sb = new StringBuilder("ABC");
+        sb.insert(sb.length(), 'H');
+        System.out.println(sb.toString());
     }
 
     public void testGenome() {

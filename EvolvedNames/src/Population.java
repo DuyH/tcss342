@@ -19,6 +19,8 @@ public class Population {
 
     public void day() {
 
+        // consider a sorting algorithm here to sort the array of genomes
+
         // 1. Update most-fit Genome in the population (lowest fitness)
 
         // 2. Delete least fit half of population
@@ -28,6 +30,10 @@ public class Population {
         // b. Randomly pick a genome, clone, crossover, mutate
 
         // 4.
+    }
+
+    public void sort(List<Genome> genomePopulation) {
+
     }
 
 }

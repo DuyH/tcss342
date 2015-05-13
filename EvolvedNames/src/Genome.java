@@ -3,9 +3,10 @@ import java.util.Random;
 
 public class Genome {
 
-    private String word;
-    private List<Character> charList;
+    private StringBuilder word;
     private double mutationRate;
+    private List<Character> charList;
+    Random random = new Random();
 
     private char[] phenotypes = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
             'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
@@ -13,19 +14,54 @@ public class Genome {
 
     public Genome(double mutationRate) {
 
-        word = "A";
+        word.append('A');
         this.mutationRate = mutationRate;
     }
 
     public Genome(Genome gene) {
-
+        word.append(gene.getWord());
+        mutationRate = gene.getMutationRate();
     }
 
     public void mutate() {
 
+        // Randomly add char to random position
+        if (random.nextDouble() < mutationRate) {
+            int randomSpot = random.nextInt(word.length() + 1);
+            int randomChar = random.nextInt(phenotypes.length);
+            word.insert(randomSpot, phenotypes[randomChar]);
+        }
+
+        // Randomly delete single char, if length > 1
+        if (random.nextDouble() < mutationRate) {
+            if (word.length() > 1) {
+                word.deleteCharAt(random.nextInt(word.length()));
+            }
+        }
+
+        // Randomly replace a char
+        for (int i = 0; i < word.length(); i++) {
+            if (random.nextDouble() < mutationRate) {
+                int randomChar = random.nextInt(phenotypes.length);
+                word.setCharAt(i, phenotypes[randomChar]);
+            }
+        }
+
     }
 
     public void crossover(Genome other) {
+
+        StringBuilder child = new StringBuilder();
+
+        int childLength = Math.min(word.length(), other.getWord().length());
+
+        for (int i = 0; i < childLength; i++) {
+            if (random.nextBoolean()) {
+                child.append(word.charAt(i));
+            } else {
+                child.append(other.getWord().charAt(i));
+            }
+        }
 
     }
 
@@ -73,10 +109,19 @@ public class Genome {
                 + (Math.abs(testLength - targetLength) + 1) / 2;
     }
 
+    public String getWord() {
+        return word.toString();
+    }
+
+    public double getMutationRate() {
+        return mutationRate;
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("\"(" + word + "\", " + fitness() + ")");
         return sb.toString();
 
     }
+
 }
