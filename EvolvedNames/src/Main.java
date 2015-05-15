@@ -2,37 +2,26 @@ import java.util.Random;
 
 public class Main {
 
-    public static void main(String[] args) {
+	private static int POP_SIZE = 100;
+	private static double MUTATION_RATE = 0.05;
 
-        Random random = new Random();
+	public static void main(String[] args) {
 
-        int hit = 0;
-        int miss = 0;
+		Population pool = new Population(POP_SIZE, MUTATION_RATE);
+		int day = 0;
+		while (pool.mostFit.fitness() > 0) {
+			pool.day();
+			System.out.println("Day " + day++ + ": " + pool.mostFit.toString());
+			System.out.println(pool);
+		}
 
-        for (int i = 0; i < 100; i++) {
-            if (random.nextDouble() <= 0.25) {
-                hit++;
-            } else {
-                miss++;
-            }
+	}
 
-            System.out
-                    .println("Location: " + random.nextInt("ABCDEF".length()));
-        }
-        System.out.println("Hit: " + hit);
-        System.out.println("Miss: " + miss);
-        char[] a = { 'a', 'b' };
-        System.out.println(a.length);
-        StringBuilder sb = new StringBuilder("ABC");
-        sb.insert(sb.length(), 'H');
-        System.out.println(sb.toString());
-    }
+	public void testGenome() {
 
-    public void testGenome() {
+	}
 
-    }
+	public void testPopulation() {
 
-    public void testPopulation() {
-
-    }
+	}
 }
