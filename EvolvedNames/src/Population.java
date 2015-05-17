@@ -1,18 +1,43 @@
+/*
+ * Duy Huynh
+ * TCSS 342 - Spring '15
+ * Assignment 2 - Evolved Names
+ * Population.java
+ * 
+ */
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * A Population of Genomes.
+ * 
+ * @author Duy Huynh
+ * @version 5 May 2015
+ *
+ */
 public class Population {
-    Random random = new Random();
 
-    public static String target = "DUY HUYNH"; // about 70 mutations (sort, del,
+    /** Target string for Genomes. */
+    public static String target = "DUY DO THANH HUYNH";
 
+    /** Most fit Genome (0 is most fit). */
     public Genome mostFit;
 
+    /** Collection of Genomes. */
     public List<Genome> genomePopulation;
 
-    public Population(Integer numGenomes, Double mutationRate) {
+    /** Random generator. */
+    private Random random = new Random();
+
+    /**
+     * A collection of Genomes.
+     * 
+     * @param numGenomes Total number of Genomes in the population.
+     * @param mutationRate The mutation rate.
+     */
+    public Population(final Integer numGenomes, final Double mutationRate) {
 
         // Fill and initialize genome population with numGenomes
         genomePopulation = new ArrayList<Genome>();
@@ -23,6 +48,10 @@ public class Population {
 
     }
 
+    /**
+     * A day consists of sorting the Genomes by fitness, removing least-fit members,
+     * replenishing the population by mutating or crossover survivors.
+     */
     public void day() {
 
         // consider a sorting algorithm here to sort the array of genomes
@@ -34,7 +63,8 @@ public class Population {
 
         // 2. Delete least fit half of population
         // a. We'll be able to know this with a sorted list.
-        for (int i = genomePopulation.size() - 1; i >= 50; i--) {
+        final int popHalf = genomePopulation.size() / 2;
+        for (int i = genomePopulation.size() - 1; i >= popHalf; i--) {
             genomePopulation.remove(i);
         }
 
@@ -42,29 +72,34 @@ public class Population {
         // a. Randomnly pick a genome, clone, mutate
         // b. Randomly pick a genome, clone, crossover, mutate
 
-        int survivors = genomePopulation.size();
+        final int survivors = genomePopulation.size();
 
         for (int i = 0; i < survivors; i++) {
-            // Clone a survivor
-            Genome cloned = new Genome(genomePopulation.get(random
+            // Pick a survivor at random and clone it
+            final Genome cloned = new Genome(genomePopulation.get(random
                     .nextInt(survivors)));
 
+            // Then either mutate or crossover+mutate
             if (random.nextBoolean()) {
                 // Mutate survivor and add
                 cloned.mutate();
                 genomePopulation.add(cloned);
             } else {
-                // Crossover two random remaining Genomes and add
-                Genome another = new Genome(genomePopulation.get(random
+                // Crossover two random remaining Genomes and add to population
+                final Genome another = new Genome(genomePopulation.get(random
                         .nextInt(survivors)));
                 cloned.crossover(another);
                 genomePopulation.add(new Genome(cloned));
             }
         }
 
-        // 4.
     }
 
+    /**
+     * Sort the Genomes in the population.
+     * 
+     * @param genomePopulation Population to sort.
+     */
     public void sort(List<Genome> genomePopulation) {
 
         // Bubble swap sorting:
@@ -82,8 +117,9 @@ public class Population {
         }
     }
 
+    @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sort(genomePopulation);
         for (int i = 0; i < genomePopulation.size(); i++) {
             sb.append(genomePopulation.get(i).toString() + " | ");

@@ -7,7 +7,7 @@
 <!--
     Checkstyle-Configuration: TCSS 305 Same Line Style
     Description: 
-The "braces on same line" style for Autumn 2014  TCSS 305.
+TCSS 305 Same Line Style
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
@@ -26,10 +26,6 @@ The "braces on same line" style for Autumn 2014  TCSS 305.
     <module name="ConstantName">
       <message key="name.invalidPattern" value="Constant ''{0}'' must be named IN_ALL_UPPER_CASE_WITH_UNDERSCORES."/>
     </module>
-    <module name="MemberName">
-      <property name="format" value="^my[A-Z]+[a-zA-Z0-9]*$"/>
-      <message key="name.invalidPattern" value="Instance field ''{0}'' must include only letters and numbers, start with &quot;my&quot;, and use camelCase thereafter."/>
-    </module>
     <module name="MethodName">
       <message key="name.invalidPattern" value="Method name &quot;{0}&quot; must start with a lowercase letter and contain only letters and numbers."/>
       <message key="method.name.equals.class.name" value="Method name ''{0}'' must not equal the enclosing class name."/>
@@ -43,10 +39,6 @@ The "braces on same line" style for Autumn 2014  TCSS 305.
     <module name="PackageName">
       <property name="format" value="^[a-z]+(\.[a-z]*)*$"/>
       <message key="name.invalidPattern" value="Package name ''{0}'' must be all lower case and not contain numbers."/>
-    </module>
-    <module name="ParameterName">
-      <property name="format" value="(the[A-Z]+[a-zA-Z0-9]*$)|(^(?!my)[a-z][a-zA-Z0-9]*[0-9]$)"/>
-      <message key="name.invalidPattern" value="Method parameter ''{0}'' must contain only letters and numbers and must either start with &quot;the&quot; and then use camelCase thereafter, or start with a lower case letter and end with &quot;X&quot; (where X is a digit)."/>
     </module>
     <module name="TypeName">
       <property name="format" value="^[A-Z][a-z0-9]*([A-Z][a-z0-9]*)*$"/>
