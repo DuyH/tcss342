@@ -6,7 +6,7 @@ import java.util.Random;
 public class Population {
 	Random random = new Random();
 
-	public static String target = "Duy"; // about 70 mutations (sort, del,
+	public static String target = "Duy HUYNH"; // about 70 mutations (sort, del,
 
 	public Genome mostFit;
 

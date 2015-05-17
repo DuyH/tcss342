@@ -12,7 +12,6 @@ public class Main {
 		while (pool.mostFit.fitness() > 0) {
 			pool.day();
 			System.out.println("Day " + day++ + ": " + pool.mostFit.toString());
-			System.out.println(pool);
 		}
 
 	}

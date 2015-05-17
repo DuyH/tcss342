@@ -31,14 +31,12 @@ public class Genome {
 			int randomSpot = random.nextInt(word.length() + 1);
 			int randomChar = random.nextInt(phenotypes.length);
 			word.insert(randomSpot, phenotypes[randomChar]);
-			System.out.println("RANDOM ADD!");
 		}
 
 		// Randomly delete single char, if length > 1
 		if (random.nextDouble() < mutationRate) {
 			if (word.length() > 1) {
 				word.deleteCharAt(random.nextInt(word.length()));
-				System.out.println("RANDOM DELETE!");
 
 			}
 		}
@@ -48,7 +46,6 @@ public class Genome {
 			if (random.nextDouble() < mutationRate) {
 				int randomChar = random.nextInt(phenotypes.length);
 				word.setCharAt(i, phenotypes[randomChar]);
-				System.out.println("RANDOM REPLACE!");
 
 			}
 		}
@@ -79,27 +76,32 @@ public class Genome {
 	public Integer fitness() {
 
 		// Length of current string
-		int testLength = word.length();
+		int n = word.length();
 
 		// Length of target string
-		int targetLength = Population.target.length();
+		int m = Population.target.length();
 
 		// Initialize 2D array of (testString + 1) x (targetString + 1)
-		int fit2D[][] = new int[testLength + 1][targetLength + 1];
+		int fit2D[][] = new int[n + 1][m + 1];
 
 		// Create column indices
-		for (int i = 1; i <= targetLength; i++) {
+		for (int i = 1; i <= m; i++) {
 			fit2D[0][i] = i;
 		}
 
 		// Create row indices
-		for (int i = 1; i <= testLength; i++) {
+		for (int i = 1; i <= n; i++) {
 			fit2D[i][0] = i;
 		}
 
-		// Wagner-Fischer algorithm for calculating Levenshtein edit distance:
-		for (int row = 1; row <= testLength; row++) {
-			for (int col = 1; col <= targetLength; col++) {
+		// Wagner-Fischer algorithm for calculating Levenshtein edit
+		distance: for (int row = 1; row <= n; row++) {
+			for (int col = 1; col <= m; col++) {
+
+				if (row > m) {
+					continue;
+				}
+
 				if (word.charAt(row - 1) == Population.target.charAt(row - 1)) {
 					fit2D[row][col] = fit2D[row - 1][col - 1];
 				} else {
@@ -110,9 +112,25 @@ public class Genome {
 				}
 			}
 		}
+		return fit2D[n][m] + (Math.abs(n - m) + 1) / 2;
 
-		return fit2D[testLength][targetLength]
-				+ (Math.abs(testLength - targetLength) + 1) / 2;
+		// Regular algorithm:
+		// int n = word.length();
+		// int m = Population.target.length();
+		// int l = Math.max(n, m);
+		// int f = Math.abs(m - n);
+		// for (int i = 1; i <= l; i++) {
+		//
+		// if (i <= m) {
+		//
+		// if (word.charAt(i) != Population.target.charAt(i)) {
+		// f++;
+		// }
+		// }
+		// }
+		//
+		// return f;
+
 	}
 
 	public String getWord() {
