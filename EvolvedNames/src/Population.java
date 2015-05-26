@@ -69,7 +69,7 @@ public class Population {
         }
 
         // 3. Create new genomes, using remaining, to restore population
-        // a. Randomnly pick a genome, clone, mutate
+        // a. Randomly pick a genome, clone, mutate
         // b. Randomly pick a genome, clone, crossover, mutate
 
         final int survivors = genomePopulation.size();
@@ -117,10 +117,19 @@ public class Population {
         }
     }
 
+    /**
+     * Changes the target string (testing purposes only).
+     * 
+     * @param newTarget String target string will be set to.
+     */
+    public void setTargetString(final String newTarget){
+        target = newTarget;
+    }
+    
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sort(genomePopulation);
+        //sort(genomePopulation);
         for (int i = 0; i < genomePopulation.size(); i++) {
             sb.append(genomePopulation.get(i).toString() + " | ");
         }

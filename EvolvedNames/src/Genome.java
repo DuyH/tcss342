@@ -58,21 +58,21 @@ public class Genome {
     public void mutate() {
 
         // Randomly add char to random position
-        if (random.nextDouble() < mutationRate) {
+        if (Math.random() < mutationRate) {
             final int randomSpot = random.nextInt(word.length() + 1);
             final int randomChar = random.nextInt(phenotypes.length);
             word.insert(randomSpot, phenotypes[randomChar]);
         }
 
         // Randomly delete single char, if length > 1
-        if (random.nextDouble() < mutationRate && word.length() > 1) {
+        if (Math.random() < mutationRate && word.length() > 1) {
             word.deleteCharAt(random.nextInt(word.length()));
 
         }
 
         // Randomly replace a char
         for (int i = 0; i < word.length(); i++) {
-            if (random.nextDouble() < mutationRate) {
+            if (Math.random() < mutationRate) {
                 final int randomChar = random.nextInt(phenotypes.length);
                 word.setCharAt(i, phenotypes[randomChar]);
 
@@ -206,6 +206,15 @@ public class Genome {
      */
     public String getWord() {
         return word.toString();
+    }
+
+    /**
+     * Changes the Genome's string (testing purposes only).
+     * 
+     * @param word New word Genome will change to.
+     */
+    public void setWord(final String word) {
+        this.word = new StringBuilder(word);
     }
 
     /**
