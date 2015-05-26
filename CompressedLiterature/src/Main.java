@@ -69,8 +69,8 @@ public class Main {
         // Create compressed binary file:
         createBinaryFile(codingTree.bits);
 
-        // Decode compressed message:
-        createDecodedFile(codingTree);
+        // Decode compressed message (uncomment to invoke):
+        // createDecodedFile(codingTree);
 
         // End timer:
         final long endTime = System.currentTimeMillis();
