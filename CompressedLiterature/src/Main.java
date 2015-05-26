@@ -7,14 +7,14 @@
  */
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  * Main program that takes in a text file and performs Huffman coding
@@ -27,8 +27,11 @@ import java.util.Scanner;
  */
 public class Main {
 
+    // To test other text files, remove comments from one line and comment the others:
     /** Name of text file to compress. */
-    private static final String TEXT_FILE = "src/peskyNewLines.txt";
+    private static final String TEXT_FILE = "src/WarAndPeace.txt";
+    // private static final String TEXT_FILE = "src/The Adventures of Tom Sawyer.txt";
+    // private static final String TEXT_FILE = "src/peskyNewLines.txt";
 
     /** Name of file containing Huffman codes. */
     private static final String CODES_FILE = "src/codes.txt";
@@ -56,7 +59,9 @@ public class Main {
         final long startTime = System.currentTimeMillis();
 
         // Convert a piece of text and insert into CodingTree
-        final CodingTree codingTree = new CodingTree(convertTextToString(TEXT_FILE));
+        // To test other files, remove comments in "Constants" section above
+        final CodingTree codingTree = new CodingTree(convertTextToString(TEXT_FILE,
+                Charset.defaultCharset()));
 
         // Create codes file
         createCodesFile(codingTree.codes);
@@ -65,14 +70,7 @@ public class Main {
         createBinaryFile(codingTree.bits);
 
         // Decode compressed message:
-        String decodedString = codingTree.decode(codingTree.bits, codingTree.codes);
-        try {
-            final FileWriter writer = new FileWriter(DECODED_FILE);
-            writer.write(decodedString);
-            writer.close();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+        createDecodedFile(codingTree);
 
         // End timer:
         final long endTime = System.currentTimeMillis();
@@ -90,30 +88,22 @@ public class Main {
 
     /**
      * Takes a text file and converts it into a readable String for manipulation.
+     * Adapted from http://stackoverflow.com/a/326440/3354122
      * 
      * @param textFile Original text file to be transferred to String.
-     * @return String of entire text file input.
+     * @param charSet Character encoding set.
+     * @return The text file converted into a String.
      */
-    private static String convertTextToString(final String textFile) {
+    private static String convertTextToString(final String textFile, Charset charSet) {
 
-        final StringBuilder message = new StringBuilder();
-
-        FileReader fileReader = null;
+        // Note**: Don't use Scanner because it eats away at the carriage returns...
+        byte[] encoded = null;
         try {
-            fileReader = new FileReader(textFile);
-        } catch (final FileNotFoundException e) {
+            encoded = Files.readAllBytes(Paths.get(textFile));
+        } catch (final IOException e) {
             e.printStackTrace();
         }
-
-        final Scanner fileInput = new Scanner(fileReader);
-
-        while (fileInput.hasNextLine()) {
-            message.append(fileInput.nextLine());
-        }
-        fileInput.close();
-
-        return message.toString();
-
+        return new String(encoded, charSet);
     }
 
     /**
@@ -160,4 +150,21 @@ public class Main {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Decodes a compress String to output file.
+     * 
+     * @param codingTree The CodingTree used to compress original file to be decoded.
+     */
+    private static void createDecodedFile(final CodingTree codingTree) {
+        final String decodedString = codingTree.decode(codingTree.bits, codingTree.codes);
+        try {
+            final FileWriter writer = new FileWriter(DECODED_FILE);
+            writer.write(decodedString);
+            writer.close();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -1,1 +1,7 @@
-This is a test fileTesting new lines.New.Lines area pain
+This is a test file
+
+Testing new lines.
+
+New.
+Lines are
+a pain

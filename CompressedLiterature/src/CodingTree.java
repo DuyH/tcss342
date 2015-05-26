@@ -95,7 +95,13 @@ public class CodingTree {
 
     }
 
-    public String encode(String stringToEncode) {
+    /**
+     * Takes a String and encodes it to a new String, using Huffman codes.
+     * 
+     * @param stringToEncode String to compress.
+     * @return Encoded String.
+     */
+    public String encode(final String stringToEncode) {
 
         final StringBuilder encodedString = new StringBuilder();
 
@@ -106,8 +112,18 @@ public class CodingTree {
     }
 
     // Optional: take output of Huffman's encoding and produce original text
-    public String decode(String bits, Map<Character, String> codes) {
+    /**
+     * Decode the compressed String to the original text.
+     * 
+     * @param bits The encoded String to be decompressed.
+     * @param codes The mapping of Character to Huffman codes.
+     * @return Uncompressed String (original text).
+     */
+    public String decode(final String bits, final Map<Character, String> codes) {
 
+        // Note**: New lines don't work? Maybe because Scanner ate them?
+
+        // Also need a map of the Character, String to be switched
         final Map<String, Character> reversedMap = new HashMap<>();
         for (Map.Entry<Character, String> entry : codes.entrySet()) {
             reversedMap.put(entry.getValue(), entry.getKey());
@@ -115,15 +131,13 @@ public class CodingTree {
 
         final StringBuilder temp = new StringBuilder();
 
+        // Add on each 'bit' and check if they comprise a Character.
+        // If so, append that character and move on to find the next 'bits'.
         int j = 0;
         for (int i = 0; i < bits.length(); i++) {
             for (String s : codes.values()) {
                 if (bits.substring(j, i).equals(s)) {
-                    if (reversedMap.get(s) == '\n' || reversedMap.get(s) == '\r') {
-                        temp.append("\r\n");
-                    } else {
-                        temp.append(reversedMap.get(s));
-                    }
+                    temp.append(reversedMap.get(s));
                     j = i;
                 }
             }
