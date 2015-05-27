@@ -1,3 +1,6 @@
+Start of file
+
+
 This is a test file
 
 Testing new lines.
@@ -5,3 +8,14 @@ Testing new lines.
 New.
 Lines are
 a pain.
+
+u
+g
+h
+.
+
+
+
+
+
+End of file!!%^&*(@!)#
