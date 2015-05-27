@@ -78,7 +78,7 @@ public class Main {
         createBinaryFile(codingTree.bits);
 
         // Decode compressed message (uncomment to invoke):
-        createDecodedFile(codingTree);
+        //createDecodedFile(codingTree);
 
         // End timer:
         final long endTime = System.currentTimeMillis();
@@ -116,8 +116,7 @@ public class Main {
      * Creates a file containing characters from a text and their respective
      * Huffman code.
      * 
-     * @param codes
-     *            Map of Characters and their Huffman code.
+     * @param codes Map of Characters and their Huffman code.
      */
     private static void createCodesFile(final Map<Character, String> codes) {
 
