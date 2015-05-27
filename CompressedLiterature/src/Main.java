@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * Main program that takes in a text file and performs Huffman coding algorithm,
  * compresses the text file, and outputs the compressed text file along with the
- * Huffman codes in a seperate file.
+ * Huffman codes in a separate file.
  * 
  * @author Duy Huynh
  * @version 20 May 2015
@@ -53,8 +53,7 @@ public class Main {
     private static final int BYTE = 8;
 
     /**
-     * Main program that takes a text file, uses Huffman coding to output
-     * compressed file.
+     * Main program that compresses text file using Huffman codes.
      * 
      * @param args Command line arguments
      */
@@ -89,13 +88,11 @@ public class Main {
     }
 
     /**
-     * Takes a text file and converts it into a readable String for
-     * manipulation. Adapted from http://stackoverflow.com/a/326440/3354122
+     * Takes a text file and converts it into a String.
+     * Adapted from http://stackoverflow.com/a/326440/3354122
      * 
-     * @param textFile
-     *            Original text file to be transferred to String.
-     * @param charSet
-     *            Character encoding set.
+     * @param textFile Original text file to be transferred to String.
+     * @param charSet Character encoding set.
      * @return The text file converted into a String.
      */
     private static String convertTextToString(final String textFile,
@@ -113,8 +110,7 @@ public class Main {
     }
 
     /**
-     * Creates a file containing characters from a text and their respective
-     * Huffman code.
+     * Creates a file of Huffman Codes.
      * 
      * @param codes Map of Characters and their Huffman code.
      */
@@ -132,8 +128,7 @@ public class Main {
     /**
      * Writes binary file output of the encoded String.
      * 
-     * @param encodedString
-     *            The encoded String in 'binary' 1's and 0's for file output.
+     * @param encodedString Encoded String.
      */
     private static void createBinaryFile(final String encodedString) {
         try {
@@ -164,8 +159,7 @@ public class Main {
     /**
      * Decodes a compress String to output file.
      * 
-     * @param codingTree
-     *            The CodingTree used to compress original file to be decoded.
+     * @param codingTree The CodingTree used for original text file.
      */
     private static void createDecodedFile(final CodingTree codingTree) {
         final String decodedString = codingTree.decode(codingTree.bits,
@@ -182,10 +176,8 @@ public class Main {
     /**
      * Display compression statistics.
      * 
-     * @param startTime
-     *            Time when compression started.
-     * @param endTime
-     *            Time when compression ended.
+     * @param startTime Time when compression started.
+     * @param endTime Time when compression ended.
      */
     private static void displayStats(final long startTime, final long endTime) {
 
