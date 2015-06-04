@@ -20,13 +20,12 @@ import java.util.PriorityQueue;
 public class CodingTree {
 
     // Global fields:
-	
+
     /** Map of characters in binary 1's, 0's created from compressed text. */
     public Map<Character, String> codes;
 
     /** Priority queue, holding list of Nodes for Huffman algorithm. */
     public PriorityQueue<Node> myQueue;
-
 
     /** Encoded message after compressing with Huffman codes. */
     public String bits;
@@ -151,7 +150,7 @@ public class CodingTree {
      * A node that consists of a char, the frequency of that char, left and right Node.
      */
     @SuppressWarnings("rawtypes")
-    public class Node implements Comparable {
+    private final class Node implements Comparable {
 
         /** Node's left child node. */
         private Node leftChild;
@@ -171,7 +170,7 @@ public class CodingTree {
          * @param c The Node's character.
          * @param freq The Node's character frequency.
          */
-        public Node(final char c, final int freq) {
+        private Node(final char c, final int freq) {
             leftChild = null;
             rightChild = null;
             myChar = c;
@@ -186,7 +185,7 @@ public class CodingTree {
          * @param left The Node's left child.
          * @param right The Node's right child.
          */
-        public Node(final char c, final int freq, final Node left, final Node right) {
+        private Node(final char c, final int freq, final Node left, final Node right) {
             leftChild = left;
             rightChild = right;
             myChar = c;
@@ -198,7 +197,7 @@ public class CodingTree {
          * 
          * @return Whether this Node is a leaf.
          */
-        public boolean isLeaf() {
+        private boolean isLeaf() {
             return leftChild == null && rightChild == null;
         }
 

@@ -32,6 +32,7 @@ public class Main {
     /** Name of text file to compress. */
     private static final String TEXT_FILE = "src/WarAndPeace.txt";
     // private static final String TEXT_FILE = "src/TheAdventuresofTomSawyer.txt";
+    // private static final String TEXT_FILE = "src/TheYellowWallpaper.txt";
 
     /** Name of test file to compress. */
     private static final String TEST_FILE = "src/peskyNewLines.txt";
@@ -144,7 +145,7 @@ public class Main {
             }
 
             // Write to binary file, 8 'bits' at a time.
-            for (int i = 0; i < fixedString.length(); i += BYTE) {
+            for (int i = 0; i < encodedString.length(); i += BYTE) {
                 output.write(Integer.parseInt(
                         fixedString.substring(i, i + BYTE), 2));
             }
