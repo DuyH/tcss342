@@ -1,7 +1,7 @@
 /*
  * Duy Huynh
  * TCSS 342 - Spring '15
- * Assignment 3 - Compressed Literature
+ * Assignment 4 - Compressed Literature 2
  * Main.java
  * 
  */
@@ -22,20 +22,16 @@ import java.util.Map;
  * Huffman codes in a separate file.
  * 
  * @author Duy Huynh
- * @version 20 May 2015
+ * @version 6/1/2015
  *
  */
 public class Main {
 
-    // To test other text files, remove comments from one line and comment the
-    // others:
+    // To test other files, remove comments from one line and comment the others:
     /** Name of text file to compress. */
     private static final String TEXT_FILE = "src/WarAndPeace.txt";
     // private static final String TEXT_FILE = "src/TheAdventuresofTomSawyer.txt";
     // private static final String TEXT_FILE = "src/TheYellowWallpaper.txt";
-
-    /** Name of test file to compress. */
-    private static final String TEST_FILE = "src/peskyNewLines.txt";
 
     /** Name of file containing Huffman codes. */
     private static final String CODES_FILE = "src/codes.txt";
@@ -77,7 +73,11 @@ public class Main {
         createBinaryFile(codingTree.bits);
 
         // Decode compressed message (uncomment to invoke):
-        //createDecodedFile(codingTree);
+        // createDecodedFile(codingTree);
+
+        // HashTable stats:
+        codingTree.codes.stats();
+        System.out.println();
 
         // End timer:
         final long endTime = System.currentTimeMillis();
@@ -114,7 +114,7 @@ public class Main {
      * 
      * @param codes Map of Characters and their Huffman code.
      */
-    private static void createCodesFile(final Map<Character, String> codes) {
+    private static void createCodesFile(final MyHashTable<String, String> codes) {
 
         try {
             final FileWriter writer = new FileWriter(CODES_FILE);
@@ -161,9 +161,9 @@ public class Main {
      * 
      * @param codingTree The CodingTree used for original text file.
      */
+
     private static void createDecodedFile(final CodingTree codingTree) {
-        final String decodedString = codingTree.decode(codingTree.bits,
-                codingTree.codes);
+        final String decodedString = codingTree.decode(codingTree.bits);
         try {
             final FileWriter writer = new FileWriter(DECODED_FILE);
             writer.write(decodedString);
@@ -196,7 +196,7 @@ public class Main {
     private static void testProgram() {
 
         // Test reading in a text file (first 1000 characters)
-        String test = convertTextToString(TEST_FILE, Charset.defaultCharset());
+        String test = convertTextToString(TEXT_FILE, Charset.defaultCharset());
         System.out.println("Original uncompressed text:");
         System.out.println(test);
         System.out.println("=========================");
@@ -216,7 +216,7 @@ public class Main {
 
         // Test decode by decoding first 100 bits
         System.out.println("Compressed bits decoded:");
-        String decodedString = testTree.decode(testTree.bits, testTree.codes);
+        String decodedString = testTree.decode(testTree.bits);
         System.out.println(decodedString);
 
     }

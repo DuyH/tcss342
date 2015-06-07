@@ -1,7 +1,7 @@
 /*
  * Duy Huynh
  * TCSS 342 - Spring '15
- * Assignment 3 - Compressed Literature
+ * Assignment 4 - Compressed Literature 2
  * CodingTree.java
  * 
  */
@@ -14,21 +14,26 @@ import java.util.PriorityQueue;
  * Compresses literature by using Huffman's coding algorithm.
  * 
  * @author Duy Huynh
- * @version 17 May 2015
+ * @version 6/1/2015
  *
  */
 public class CodingTree {
 
     // Global fields:
 
-    /** Map of characters in binary 1's, 0's created from compressed text. */
-    public Map<Character, String> codes;
+    /** Bucket count for my hash table. */
+    private static final int BUCKETS = 32678;
+
+    /** Map of words in binary 1's, 0's created from compressed text. */
+    public MyHashTable<String, String> codes;
 
     /** Priority queue, holding list of Nodes for Huffman algorithm. */
     public PriorityQueue<Node> myQueue;
 
     /** Encoded message after compressing with Huffman codes. */
     public String bits;
+
+    private Node finalHuffman;
 
     /**
      * Constructor that takes a string to be compressed.
@@ -37,24 +42,24 @@ public class CodingTree {
      */
     public CodingTree(final String message) {
 
-        // Count the frequency of each char in text file:
-        final CharFrequencyCounter charFreqCounter = new CharFrequencyCounter(message);
+        // Count the frequency of each word in text file:
+        final WordFrequencyCounter wordFreqCounter = new WordFrequencyCounter(message);
 
         // Implement Java's PriorityQueue, consisting of Nodes that contain char and freq
         myQueue = new PriorityQueue<Node>();
 
-        // For each unique char found from file, create a Node and insert into priority q.
+        // For each unique word found from file, create a Node and insert into priority q.
         // Note*: Node has to implement Comparable in order for PriorityQueue to sort
         // the nodes with lowest freq being highest priority (first one to be polled).
-        for (Character c : charFreqCounter.charFrequency.keySet()) {
-            myQueue.offer(new Node(c, charFreqCounter.charFrequency.get(c)));
+        for (String s : wordFreqCounter.wordFreq.keySet()) {
+            myQueue.offer(new Node(s, wordFreqCounter.wordFreq.get(s)));
         }
 
         // Build Huffman Coding Tree out of the nodes.
         buildHuffmanTree();
 
-        // Create the codes for each character:
-        codes = new HashMap<Character, String>();
+        // Create the codes for each word:
+        codes = new MyHashTable<String, String>(BUCKETS);
         createCode(myQueue.poll(), "");
 
         // Create encoded text with Huffman codes
@@ -67,26 +72,28 @@ public class CodingTree {
      */
     public void buildHuffmanTree() {
 
-        // Merge singular char trees until only one Node remains in priority queue
+        // Merge singular word trees until only one Node remains in priority queue
         while (myQueue.size() > 1) {
             final Node left = myQueue.poll();
             final Node right = myQueue.poll();
-            final Node parent = new Node('\0', left.myFreq + right.myFreq, left, right);
+            final Node parent = new Node(null, left.myFreq + right.myFreq, left, right);
             myQueue.offer(parent);
         }
+        finalHuffman = myQueue.peek();
+
     }
 
     /**
-     * Recursively create Huffman code for each leaf of the Node (leaf is a character).
+     * Recursively create Huffman code for each leaf of the Node (leaf is a word).
      * 
      * @param encodeNode Node to be examined in recursion.
      * @param code String of Huffman code.
      */
     public void createCode(final Node encodeNode, final String code) {
 
-        // Base case: We hit leaf (character) so add the character + builtup code to map
+        // Base case: We hit leaf (single word) so add the character + builtup code to map
         if (encodeNode.isLeaf()) {
-            codes.put(encodeNode.myChar, code);
+            codes.put(encodeNode.myString, code);
         } else {
             // Recurse down the left and right childs, adding 0 for left, 1 for right.
             createCode(encodeNode.leftChild, code + "0");
@@ -104,9 +111,28 @@ public class CodingTree {
     public String encode(final String stringToEncode) {
 
         final StringBuilder encodedString = new StringBuilder();
+        StringBuilder newWord = new StringBuilder();
 
         for (int i = 0; i < stringToEncode.length(); i++) {
-            encodedString.append(codes.get(stringToEncode.charAt(i)));
+
+            // Grab current character of message
+            char c = stringToEncode.charAt(i);
+
+            // Append valid characters to new word
+            if (('A' <= c && c <= 'Z') || ('0' <= c && c <= '9')
+                    || ('a' <= c && c <= 'z') || c == '\'' || c == '-') {
+                newWord.append(c);
+            } else {
+                if (newWord.length() > 0) {
+                    encodedString.append(codes.get(newWord.toString()));
+                    encodedString.append(codes.get(Character.toString(c)));
+                    newWord = new StringBuilder();
+                }
+                else {
+                    encodedString.append(codes.get(Character.toString(c)));
+                }
+            }
+
         }
         return encodedString.toString();
     }
@@ -119,30 +145,26 @@ public class CodingTree {
      * @param codes The mapping of Character to Huffman codes.
      * @return Uncompressed String (original text).
      */
-    public String decode(final String bits, final Map<Character, String> codes) {
+    public String decode(final String bits) {
 
-        // Note**: New lines don't work? Maybe because Scanner ate them?
+        StringBuilder decodedMessage = new StringBuilder();
+        Node decodingHuffman = finalHuffman;
 
-        // Also need a map of the Character, String to be switched
-        final Map<String, Character> reversedMap = new HashMap<>();
-        for (Map.Entry<Character, String> entry : codes.entrySet()) {
-            reversedMap.put(entry.getValue(), entry.getKey());
-        }
-
-        final StringBuilder temp = new StringBuilder();
-
-        // Add on each 'bit' and check if they comprise a Character.
-        // If so, append that character and move on to find the next 'bits'.
-        int j = 0;
         for (int i = 0; i < bits.length(); i++) {
-            for (String s : codes.values()) {
-                if (bits.substring(j, i).equals(s)) {
-                    temp.append(reversedMap.get(s));
-                    j = i;
-                }
+            if (decodingHuffman.isLeaf()) {
+                decodedMessage.append(decodingHuffman.myString);
+                decodingHuffman = finalHuffman;
+                continue;
+            } else if (bits.charAt(i) == '0') {
+                decodingHuffman = decodingHuffman.leftChild;
+            } else if (bits.charAt(i) == '1') {
+                decodingHuffman = decodingHuffman.rightChild;
             }
+
         }
-        return temp.toString();
+
+        // Need MyHashTable to switch key and value pair
+        return decodedMessage.toString();
 
     }
 
@@ -159,7 +181,7 @@ public class CodingTree {
         private Node rightChild;
 
         /** Node's character. */
-        private char myChar;
+        private String myString;
 
         /** Character frequency count. */
         private int myFreq;
@@ -167,13 +189,13 @@ public class CodingTree {
         /**
          * Create a Node containing a character and frequency.
          * 
-         * @param c The Node's character.
+         * @param s The Node's character.
          * @param freq The Node's character frequency.
          */
-        private Node(final char c, final int freq) {
+        private Node(final String s, final int freq) {
             leftChild = null;
             rightChild = null;
-            myChar = c;
+            myString = s;
             myFreq = freq;
         }
 
@@ -185,10 +207,10 @@ public class CodingTree {
          * @param left The Node's left child.
          * @param right The Node's right child.
          */
-        private Node(final char c, final int freq, final Node left, final Node right) {
+        private Node(final String s, final int freq, final Node left, final Node right) {
             leftChild = left;
             rightChild = right;
-            myChar = c;
+            myString = s;
             myFreq = freq;
         }
 
@@ -225,7 +247,7 @@ public class CodingTree {
 
         @Override
         public String toString() {
-            return "Char: " + myChar + " Freq: " + myFreq;
+            return "String: " + myString + " Freq: " + myFreq;
         }
 
     }
@@ -236,30 +258,56 @@ public class CodingTree {
      * @author Duy Huynh
      * @version 25 May 2015
      */
-    private final class CharFrequencyCounter {
+    private final class WordFrequencyCounter {
 
-        /** Map of Character and its frequency. */
-        private Map<Character, Integer> charFrequency;
+        /** Map of Word and its frequency. */
+        private Map<String, Integer> wordFreq;
 
         /**
-         * Counts frequency of characters from a String.
+         * Counts frequency of words from a String.
          * 
-         * @param string String to count character frequency from.
+         * @param string String to count word frequency from.
          */
-        private CharFrequencyCounter(final String string) {
+        private WordFrequencyCounter(final String string) {
 
-            charFrequency = new HashMap<Character, Integer>();
+            StringBuilder newWord = new StringBuilder();
+            wordFreq = new HashMap<String, Integer>();
 
-            int i = 0;
-            while (i < string.length()) {
-                final char c = string.charAt(i);
-                if (charFrequency.containsKey(c)) {
-                    charFrequency.put(c, charFrequency.get(c) + 1);
+            for (int i = 0; i < string.length(); i++) {
+
+                // Grab current character of message
+                char c = string.charAt(i);
+
+                // Append valid characters to new word
+                if (('A' <= c && c <= 'Z') || ('0' <= c && c <= '9')
+                        || ('a' <= c && c <= 'z') || c == '\'' || c == '-') {
+                    newWord.append(c);
+
+                    // If not valid, then we stop and insert the word into hashtable
                 } else {
-                    charFrequency.put(c, 1);
+                    String key = newWord.toString();
+                    if (key.length() > 0) {
+                        // Check if word is already in hashtable
+                        if (wordFreq.containsKey(key)) {
+                            // If word already in table, increment count
+                            wordFreq.put(key, wordFreq.get(key) + 1);
+                            // Otherwise add the word and set freq to 1
+                        } else {
+                            wordFreq.put(key, 1);
+                        }
+                        newWord = new StringBuilder();
+                    }
+                    // Add the invalid character, insert into table
+                    String seperator = Character.toString(c);
+                    if (wordFreq.containsKey(seperator)) {
+                        wordFreq.put(seperator, wordFreq.get(seperator) + 1);
+                    } else {
+                        wordFreq.put(seperator, 1);
+                    }
+
                 }
-                i++;
             }
+
         }
 
     }
